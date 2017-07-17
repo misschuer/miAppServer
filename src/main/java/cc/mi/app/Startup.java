@@ -7,7 +7,8 @@ import org.ini4j.Config;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
-import cc.mi.app.appClient.AppClient;
+import cc.mi.app.appClient.AppClientHandler;
+import cc.mi.core.serverClient.ServerClient;
 
 public class Startup {
 	private static final String APP_CLIENT = "appClient";
@@ -24,7 +25,7 @@ public class Startup {
         	ini.load(url);
 
         	Section section = ini.get(APP_CLIENT);
-        	AppClient.start(section.get(IP), Integer.parseInt(section.get(PORT)));
+        	ServerClient.start(section.get(IP), Integer.parseInt(section.get(PORT)), new AppClientHandler());
         	
         } catch (IOException e) {
         	e.printStackTrace();
