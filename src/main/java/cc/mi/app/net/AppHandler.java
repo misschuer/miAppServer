@@ -1,7 +1,7 @@
 package cc.mi.app.net;
 
 import cc.mi.core.coder.Coder;
-import cc.mi.app.system.SystemManager;
+import cc.mi.app.system.AppSystemManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -9,8 +9,8 @@ public class AppHandler extends SimpleChannelInboundHandler<Coder> {
 	
 	public void channelActive(final ChannelHandlerContext ctx) {
 		System.out.println("connect to center success");
-		SystemManager.setCenterChannel(ctx.channel());
-		SystemManager.regToCenter();
+		AppSystemManager.setCenterChannel(ctx.channel());
+		AppSystemManager.regToCenter();
 	}
 	
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
