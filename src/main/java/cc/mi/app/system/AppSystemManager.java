@@ -14,7 +14,7 @@ public class AppSystemManager {
 	
 	private static Channel centerChannel = null;
 	
-	private static final List<Integer> opcodes;
+	protected static final List<Integer> opcodes;
 		
 	static {
 		executor = Executors.newSingleThreadExecutor();
