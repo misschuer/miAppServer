@@ -14,7 +14,7 @@ public class AppHandler extends SimpleChannelInboundHandler<Packet> implements C
 	
 	@Override
 	public void channelRead0(final ChannelHandlerContext ctx, final Packet coder) throws Exception {
-		
+		AppServerManager.getInstance().pushPacket(coder);
 	}
 	
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
