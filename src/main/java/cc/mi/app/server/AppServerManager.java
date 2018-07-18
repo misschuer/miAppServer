@@ -94,6 +94,9 @@ public class AppServerManager extends ServerManager {
 	}
 	
 	private void doInit() {
+		if (this.centerChannel == null) {
+			return;
+		}
 		logger.devLog("do init");
 		this.addTagWatchAndCall(ObjectType.FACTION_BINLOG_OWNER_STRING);
 		this.addTagWatchAndCall(ObjectType.GROUP_BINLOG_OWNER_STRING);
