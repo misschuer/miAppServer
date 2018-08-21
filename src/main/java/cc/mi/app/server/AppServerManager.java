@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import cc.mi.app.handler.BinlogDataModifyHandler;
+import cc.mi.app.handler.InnerServerConnListHandler;
 import cc.mi.core.callback.AbstractCallback;
 import cc.mi.core.callback.Callback;
 import cc.mi.core.constance.IdentityConst;
@@ -43,6 +44,7 @@ public class AppServerManager extends ServerManager {
 	
 	static {
 		handlers.put(Opcodes.MSG_BINLOGDATAMODIFY, new BinlogDataModifyHandler());
+		handlers.put(Opcodes.MSG_INNERSERVERCONNLIST, new InnerServerConnListHandler());
 		
 		opcodes = new LinkedList<>();
 		opcodes.addAll(handlers.keySet());
