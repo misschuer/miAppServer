@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 
 import cc.mi.app.handler.BinlogDataModifyHandler;
 import cc.mi.app.handler.InnerServerConnListHandler;
+import cc.mi.app.handler.PlayerLoginHandler;
+import cc.mi.app.loginAction.AppLoginManager;
+import cc.mi.core.binlog.data.BinlogData;
 import cc.mi.core.callback.AbstractCallback;
 import cc.mi.core.callback.Callback;
 import cc.mi.core.constance.IdentityConst;
@@ -39,12 +42,15 @@ public class AppServerManager extends ServerManager {
 	// 最后一次执行帧刷新的时间戳
 	protected long timestamp = 0;
 	
+	public final AppLoginManager loginManager = new AppLoginManager();
+	
 	// 对象管理
-	private final AppObjectManager objManager = new AppObjectManager();
+	public final AppObjectManager objManager = new AppObjectManager();
 	
 	static {
 		handlers.put(Opcodes.MSG_BINLOGDATAMODIFY, new BinlogDataModifyHandler());
 		handlers.put(Opcodes.MSG_INNERSERVERCONNLIST, new InnerServerConnListHandler());
+		handlers.put(Opcodes.MSG_PLAYERLOGIN, new PlayerLoginHandler());
 		
 		opcodes = new LinkedList<>();
 		opcodes.addAll(handlers.keySet());
@@ -156,5 +162,13 @@ public class AppServerManager extends ServerManager {
 	
 	protected void addTagWatchCallback(String ownerTag, Callback<Void> callback) {
 		objManager.addCreateCallback(ownerTag, callback);
+	}
+	
+	public void putObjects(String ownerId, final List<BinlogData> result, AbstractCallback<Boolean> abstractCallback) {
+		this.objManager.putObjects(this.centerChannel, ownerId, result, abstractCallback);
+	}
+	
+	public void putObject(String ownerId, BinlogData result, Callback<Boolean> callback) {
+		this.objManager.putObject(this.centerChannel, ownerId, result, callback);
 	}
 }
