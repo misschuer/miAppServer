@@ -28,7 +28,7 @@ import cc.mi.core.utils.ServerProcessBlock;
 
 public class AppServerManager extends ServerManager {
 	static final CustomLogger logger = CustomLogger.getLogger(AppServerManager.class);
-	private static AppServerManager instance;
+	private static AppServerManager instance = new AppServerManager();
 	// 消息收到以后的回调
 	private static final Map<Integer, Handler> handlers = new HashMap<>();
 	private static final List<Integer> opcodes;
@@ -57,15 +57,6 @@ public class AppServerManager extends ServerManager {
 	}
 	
 	public static AppServerManager getInstance() {
-		if (instance == null) {
-			instance = new AppServerManager();
-			instance.process = new ServerProcessBlock() {
-				@Override
-				public void run(int diff) {
-					instance.doInit();
-				}
-			};
-		}
 		return instance;
 	}
 	
@@ -89,6 +80,13 @@ public class AppServerManager extends ServerManager {
 				}
 			}
 		}, 1000, 100, TimeUnit.MILLISECONDS);
+		
+		this.process = new ServerProcessBlock() {
+			@Override
+			public void run(int diff) {
+				instance.doInit();
+			}
+		};
 	}
 	
 	/**
