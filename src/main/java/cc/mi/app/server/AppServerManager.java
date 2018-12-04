@@ -5,6 +5,7 @@ import java.util.List;
 import cc.mi.app.handler.BinlogDataModifyHandler;
 import cc.mi.app.handler.InnerServerConnListHandler;
 import cc.mi.app.handler.PlayerLoginHandler;
+import cc.mi.app.handler.PlayerLogoutHandler;
 import cc.mi.app.loginAction.AppLoginManager;
 import cc.mi.core.binlog.data.BinlogData;
 import cc.mi.core.callback.AbstractCallback;
@@ -33,7 +34,9 @@ public class AppServerManager extends ServerManager {
 	protected void onOpcodeInit() {
 		handlers.put(Opcodes.MSG_BINLOGDATAMODIFY, new BinlogDataModifyHandler());
 		handlers.put(Opcodes.MSG_INNERSERVERCONNLIST, new InnerServerConnListHandler());
-		handlers.put(Opcodes.MSG_PLAYERLOGIN, new PlayerLoginHandler());
+		handlers.put(Opcodes.MSG_APPPLAYERLOGINMSG, new PlayerLoginHandler());
+		handlers.put(Opcodes.MSG_APPPLAYERLOGOUTMSG, new PlayerLogoutHandler());
+		
 		
 		opcodes.addAll(handlers.keySet());
 	}
