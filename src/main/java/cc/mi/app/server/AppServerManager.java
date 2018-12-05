@@ -97,6 +97,9 @@ public class AppServerManager extends ServerManager {
 				// 排行
 //				m_rank_list_mgr->Update(diff);
 				// 其他待做
+				
+				//对象管理器
+//				m_obj_mgr->Update();
 			}
 		};
 		this.startReady();

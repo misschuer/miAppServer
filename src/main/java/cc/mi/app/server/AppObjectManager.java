@@ -25,4 +25,9 @@ public class AppObjectManager extends ServerObjectManager {
 		}
 		return new BinlogData(1 << 6, 1 << 6);
 	}
+	
+	@Override
+	public boolean update(int diff) {
+		return false;
+	}
 }
