@@ -121,8 +121,17 @@ public class AppServerManager extends ServerManager {
 		this.startReady();
 	}
 	
+	@Override
+	protected boolean isLocalBinlogDataExists(String binlogId) {
+		return AppObjectManager.INSTANCE.contains(binlogId);
+	}
+	
 	protected void addTagWatchCallback(String ownerTag, Callback<Void> callback) {
-		AppObjectManager.INSTANCE.addCreateCallback(ownerTag, callback);
+		AppObjectManager.INSTANCE.addOwnerCreateCallback(ownerTag, callback);
+	}
+	
+	protected void addWatchCallback(String binlogId, Callback<Void> callback) {
+		AppObjectManager.INSTANCE.addCreateCallback(binlogId, callback);
 	}
 	
 	public void putObjects(String ownerId, final List<BinlogData> result, AbstractCallback<Boolean> abstractCallback) {

@@ -31,21 +31,13 @@ public class AppContextPlayer extends PlayerBase {
 		this.context.setGuid(this.getGuid());
 		this.context.setStatus(SessionStatus.STATUS_AUTHED); //到这里的都是验证通过的
 
-//		//初始化金钱
-//		for (uint32 i = 0; i < MAX_MONEY_TYPE; i++)
-//		{
-//			m_all_money[i] = GetDouble(PLAYER_EXPAND_INT_MONEY + i*2);
-//		}
-		boolean isPkServer = false;	// 服务器是否是跨服服务器
-		if (!isPkServer) {
-			this.newOtherBinlog();
-		}
+		this.newOtherBinlog();
 //		//插入账号信息查询库
 //		InsertPlayerMap();
-//
+		
 //		AppdApp::g_app->RegSessionOpts(fd_);
-//		//登录完毕
-//		SetStatus(STATUS_LOGGEDIN);
+		//登录完毕
+		this.context.setStatus(SessionStatus.STATUS_LOGGEDIN); //登录成功
 //		//发个登录应用服完毕的包给客户端
 //		Call_join_or_leave_server(m_delegate_sendpkt, 0, SERVER_TYPE_APPD, getpid(), AppdApp::g_app->Get_Connection_ID(), uint32(time(nullptr)));
 //
@@ -97,44 +89,26 @@ public class AppContextPlayer extends PlayerBase {
 		this.newOtherBinlog(newGuid, flag, callback);
 	}
 	
-	private void newOtherBinlog(String newGuid, int flag, AbstractCallback<BinlogData> callback) {
+	private void newOtherBinlog(final String newGuid, int flag, AbstractCallback<BinlogData> callback) {
 		if (!AppObjectManager.INSTANCE.contains(newGuid)) {//如果不存在，重新建一个
 			logger.devLog("AppContext newOtherBinlog guid ={} newGuid={}", this.context.getGuid(), newGuid);
 			
 			if (this.isBinlogCreated((short) flag)) {
 				logger.devLog("AppContext newOtherBinlog err, player.isBinlogCreated(%u), guid ={} newGuid={}", flag, this.context.getGuid(), newGuid);
-//				string player_guid = guid();
-//				ObjMgr.CallAddWatch(new_guid, [player_guid, new_guid, flag, create_fun](bool b){
-//					AppdContext *player = ObjMgr.FindPlayer(player_guid);
-//					if(b)
-//					{
-//						tea_pinfo("AppdContext::NewOtherBinlog callback ok player->GetFlags(%u), %s", flag, player_guid.c_str());
-//						ObjMgr.CallSetTag(new_guid, player_guid);
-//						if(player) {
-//							ObjMgr.InsertObjOwner(new_guid);
-//							// 技能的话生成临时数据
-//							if (GuidManager::GetPrefix(new_guid) == ObjectTypeSpell) {
-//								player->generateTempSpellLevelInfo(ObjMgr.Get(new_guid));
-//							}
+				AppServerManager.getInstance().addWatchAndCall(newGuid, new AbstractCallback<Void>() {
+					@Override
+					public void invoke(Void value) {
+//						// 技能的话生成临时数据
+//						if (GuidManager::GetPrefix(new_guid) == ObjectTypeSpell) {
+//							player->generateTempSpellLevelInfo(ObjMgr.Get(new_guid));
 //						}
-//						else
-//							ObjMgr.CallDelWatch(new_guid);
-//					}
-//					else
-//					{
-//						tea_pinfo("AppdContext::NewOtherBinlog callback err player->GetFlags(%u), %s", flag, player_guid.c_str());
-//						if(player && player->GetStatus() == STATUS_LOGGEDIN)
-//						{
-//							stringstream ss;
-//							ss << flag;
-//							player->Close(PLAYER_CLOSE_OPERTE_APPD_ONE2,"");
-//						}
-//					}
-//				});
+					}
+				});
 				return;
 			}
 			//没有取到，就new个
 			this.createOtherBinlog(newGuid, flag, callback);
+
 		} else {
 //			// 技能的话生成临时数据
 //			if (GuidManager::GetPrefix(new_guid) == ObjectTypeSpell) {
@@ -161,9 +135,6 @@ public class AppContextPlayer extends PlayerBase {
 		this.setBinlogCreate((short) flag);
 		
 		AppServerManager.getInstance().putObject(this.context.getGuid(), binlogData, null);
-//		vector<GuidObject*> vec;
-//		vec.push_back(binlog);
-//		ObjMgr.CallPutObjects(guid(), vec);
 //
 //		// 如果创建的是技能对象那就让技能槽的对象拷贝过去
 //		if (GuidManager::GetPrefix(new_guid) == ObjectTypeSpell) {
