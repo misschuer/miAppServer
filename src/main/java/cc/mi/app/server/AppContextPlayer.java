@@ -1,18 +1,24 @@
 package cc.mi.app.server;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import cc.mi.core.binlog.data.BinlogData;
 import cc.mi.core.callback.AbstractCallback;
 import cc.mi.core.constance.BinlogFlag;
 import cc.mi.core.constance.ObjectType;
 import cc.mi.core.constance.PlayerEnumFields;
+import cc.mi.core.impl.Tick;
 import cc.mi.core.log.CustomLogger;
 import cc.mi.core.server.GuidManager;
 import cc.mi.core.server.PlayerBase;
 import cc.mi.core.server.SessionStatus;
 
-public class AppContextPlayer extends PlayerBase {
+public class AppContextPlayer extends PlayerBase implements Tick {
 	static final CustomLogger logger = CustomLogger.getLogger(AppContextPlayer.class);
 	private AppContext context = new AppContext();
+	
+	private static final Map<String, AppContextPlayer> playerHash = new HashMap<>();
 
 	public AppContextPlayer() {
 		super(PlayerEnumFields.PLAYER_INT_FIELDS_SIZE, PlayerEnumFields.PLAYER_STR_FIELDS_SIZE);
@@ -33,7 +39,7 @@ public class AppContextPlayer extends PlayerBase {
 
 		this.newOtherBinlog();
 //		//插入账号信息查询库
-//		InsertPlayerMap();
+		playerHash.put(this.getGuid(), this);
 		
 //		AppdApp::g_app->RegSessionOpts(fd_);
 		//登录完毕
@@ -41,7 +47,7 @@ public class AppContextPlayer extends PlayerBase {
 //		//发个登录应用服完毕的包给客户端
 //		Call_join_or_leave_server(m_delegate_sendpkt, 0, SERVER_TYPE_APPD, getpid(), AppdApp::g_app->Get_Connection_ID(), uint32(time(nullptr)));
 //
-//		//玩家登录以后，做点什么。 TODO: 这里决定是否需要处理邀请的玩家
+//		//玩家登录以后，做点什么
 //		DoPlayerLogin();
 //		if(!AppdApp::g_app->IsPKServer())
 //		{
@@ -145,11 +151,26 @@ public class AppContextPlayer extends PlayerBase {
 //		}
 	}
 	
+	public static void updateAll(int diff) {
+		for (AppContextPlayer player : playerHash.values()) {
+			//登录完成才能心跳
+			if (SessionStatus.STATUS_LOGGEDIN == player.getContext().getStatus()) {
+				player.update(diff);
+			}
+		}
+	}
+	
 	public AppContext getContext() {
 		return context;
 	}
 
 	public void setContext(AppContext context) {
 		this.context = context;
+	}
+
+	@Override
+	public boolean update(int diff) {
+		// 属性重算什么的
+		return false;
 	}
 }

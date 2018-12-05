@@ -90,32 +90,13 @@ public class AppServerManager extends ServerManager {
 		this.process = new ServerProcessBlock() {
 			@Override
 			public void run(int diff) {
+				// 登录心跳逻辑
 				loginManager.update(diff);
-//				m_localdb_mgr->Update(diff);
-//				auto& contexts = AppdApp::g_app->context_map_;
-//				for(auto it = contexts.begin();it != contexts.end();++it)
-//				{
-//					if(it->second == NULL)
-//						continue;
-//					SvrContext *context = it->second;
-//					//登录完成才能心跳
-//					if(STATUS_LOGGEDIN == context->GetStatus())
-//					{
-//						AppdContext *appContext = dynamic_cast<AppdContext*>(it->second);
-//						ASSERT(appContext);
-//						appContext->Update(diff);
-//					}
-//				}
+				// 所有玩家的心跳
+				AppContextPlayer.updateAll(diff);
+				// 排行
 //				m_rank_list_mgr->Update(diff);
-//				//准备好了，脚本可以心跳了
-//				int result = DoUpdateLua(diff);
-//				if(result)
-//				{
-//					//出错了
-//					tea_perror("AppdApp::Update DoUpdateLua %d", result);
-//				}
-//				if(m_db_access_mgr)
-//					m_db_access_mgr->UpdateAsync();
+				// 其他待做
 			}
 		};
 		this.startReady();
