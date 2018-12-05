@@ -65,6 +65,27 @@ public class AppContextPlayer extends PlayerBase {
 
 		return true;
 	}
+
+	public void logout() {
+		if (this.context.getStatus() == SessionStatus.STATUS_LOGGEDIN) {
+//			//玩家下线以后，做点什么。
+//			DoPlayerLogout();
+//
+//			//从账号map中删除
+//			RemovePlayerMap();
+
+			//状态置为下线
+			this.context.setStatus(SessionStatus.STATUS_DELETE);
+
+//			//还不需要释放，所以置0就好
+//			AppdApp::g_app->ChangeSessionID(this,0);
+//
+//			// 把自己从等级列表清除
+//			this->offline();
+		}
+
+		AppServerManager.getInstance().delTagWatchAndCall(this.getGuid());
+	}
 	
 	private void newOtherBinlog() {
 		// 社交信息ObjectTypeSocial
@@ -77,7 +98,7 @@ public class AppContextPlayer extends PlayerBase {
 	}
 	
 	private void newOtherBinlog(String newGuid, int flag, AbstractCallback<BinlogData> callback) {
-		if (!AppServerManager.getInstance().objManager.contains(newGuid)) {//如果不存在，重新建一个
+		if (!AppObjectManager.INSTANCE.contains(newGuid)) {//如果不存在，重新建一个
 			logger.devLog("AppContext newOtherBinlog guid ={} newGuid={}", this.context.getGuid(), newGuid);
 			
 			if (this.isBinlogCreated((short) flag)) {

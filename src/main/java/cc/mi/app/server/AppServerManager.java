@@ -23,8 +23,6 @@ public class AppServerManager extends ServerManager {
 	private static AppServerManager instance = new AppServerManager();
 	
 	public final AppLoginManager loginManager = new AppLoginManager();
-	// 对象管理
-	public final AppObjectManager objManager = new AppObjectManager();
 	
 	public static AppServerManager getInstance() {
 		return instance;
@@ -84,7 +82,7 @@ public class AppServerManager extends ServerManager {
 	
 	public void onBinlogDatasUpdated(List<BinlogInfo> binlogInfoList) {
 		for (BinlogInfo binlogInfo : binlogInfoList) {
-			this.objManager.parseBinlogInfo(binlogInfo);
+			AppObjectManager.INSTANCE.parseBinlogInfo(binlogInfo);
 		}
 	}
 	
@@ -92,20 +90,46 @@ public class AppServerManager extends ServerManager {
 		this.process = new ServerProcessBlock() {
 			@Override
 			public void run(int diff) {
+				loginManager.update(diff);
+//				m_localdb_mgr->Update(diff);
+//				auto& contexts = AppdApp::g_app->context_map_;
+//				for(auto it = contexts.begin();it != contexts.end();++it)
+//				{
+//					if(it->second == NULL)
+//						continue;
+//					SvrContext *context = it->second;
+//					//登录完成才能心跳
+//					if(STATUS_LOGGEDIN == context->GetStatus())
+//					{
+//						AppdContext *appContext = dynamic_cast<AppdContext*>(it->second);
+//						ASSERT(appContext);
+//						appContext->Update(diff);
+//					}
+//				}
+//				m_rank_list_mgr->Update(diff);
+//				//准备好了，脚本可以心跳了
+//				int result = DoUpdateLua(diff);
+//				if(result)
+//				{
+//					//出错了
+//					tea_perror("AppdApp::Update DoUpdateLua %d", result);
+//				}
+//				if(m_db_access_mgr)
+//					m_db_access_mgr->UpdateAsync();
 			}
 		};
 		this.startReady();
 	}
 	
 	protected void addTagWatchCallback(String ownerTag, Callback<Void> callback) {
-		objManager.addCreateCallback(ownerTag, callback);
+		AppObjectManager.INSTANCE.addCreateCallback(ownerTag, callback);
 	}
 	
 	public void putObjects(String ownerId, final List<BinlogData> result, AbstractCallback<Boolean> abstractCallback) {
-		this.objManager.putObjects(this.centerChannel, ownerId, result, abstractCallback);
+		AppObjectManager.INSTANCE.putObjects(this.centerChannel, ownerId, result, abstractCallback);
 	}
 	
 	public void putObject(String ownerId, BinlogData result, Callback<Boolean> callback) {
-		this.objManager.putObject(this.centerChannel, ownerId, result, callback);
+		AppObjectManager.INSTANCE.putObject(this.centerChannel, ownerId, result, callback);
 	}
 }

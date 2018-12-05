@@ -6,10 +6,18 @@ import cc.mi.core.server.GuidManager;
 import cc.mi.core.server.ServerObjectManager;
 
 public class AppObjectManager extends ServerObjectManager {
-	protected AppObjectManager() {
+	public static final AppObjectManager INSTANCE = new AppObjectManager();
+	private AppObjectManager() {
 		super(IdentityConst.SERVER_TYPE_APP);
 	}
 
+	public AppContextPlayer findPlayer(String guid) {
+		if (!GuidManager.INSTANCE.isPlayerGuid(guid)) {
+			return null;
+		}
+		return (AppContextPlayer)this.get(guid);
+	}
+	
 	@Override
 	protected BinlogData createBinlogData(String guid) {
 		if (GuidManager.INSTANCE.isPlayerGuid(guid)) {

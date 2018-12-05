@@ -1,6 +1,7 @@
 package cc.mi.app.loginAction;
 
 import cc.mi.app.server.AppContextPlayer;
+import cc.mi.app.server.AppObjectManager;
 import cc.mi.app.server.AppServerManager;
 import cc.mi.core.constance.LoginActionEnum;
 import cc.mi.core.loginAction.LoginActionBase;
@@ -15,7 +16,7 @@ public class AppLoginActionLogin extends LoginActionBase {
 
 	@Override
 	public boolean update(int diff) {
-		AppContextPlayer player = (AppContextPlayer) AppServerManager.getInstance().objManager.get(this.getGuid());
+		AppContextPlayer player = (AppContextPlayer) AppObjectManager.INSTANCE.get(this.getGuid());
 		if (!this.addWatched) {
 			if (player != null) {
 				//有可能玩家退出的时候，应用服正好重启，玩家未正确退出
