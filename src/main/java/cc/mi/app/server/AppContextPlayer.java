@@ -84,7 +84,7 @@ public class AppContextPlayer extends PlayerBase {
 //			this->offline();
 		}
 
-		AppServerManager.getInstance().delTagWatchAndCall(this.getGuid());
+		AppServerManager.getInstance().delTagWatch(this.getGuid());
 	}
 	
 	private void newOtherBinlog() {
