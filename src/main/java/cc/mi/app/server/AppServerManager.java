@@ -99,7 +99,7 @@ public class AppServerManager extends ServerManager {
 				// 其他待做
 				
 				//对象管理器
-//				m_obj_mgr->Update();
+				AppObjectManager.INSTANCE.update(diff);
 			}
 		};
 		this.startReady();
