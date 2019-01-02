@@ -2,6 +2,7 @@ package cc.mi.app.server;
 
 import cc.mi.core.binlog.data.BinlogData;
 import cc.mi.core.constance.IdentityConst;
+import cc.mi.core.packet.Packet;
 import cc.mi.core.server.GuidManager;
 import cc.mi.core.server.ServerObjectManager;
 
@@ -28,6 +29,9 @@ public class AppObjectManager extends ServerObjectManager {
 	
 	@Override
 	public boolean update(int diff) {
-		return false;
+		Packet packet = this.getUpdatePacket();
+		if (packet != null)
+			AppServerManager.getInstance().sendToCenter(packet);
+		return true;
 	}
 }
