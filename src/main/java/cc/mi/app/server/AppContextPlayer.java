@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cc.mi.core.binlog.data.BinlogData;
-import cc.mi.core.callback.AbstractCallback;
+import cc.mi.core.callback.CreateObjectCallback;
+import cc.mi.core.callback.InvokeCallback;
 import cc.mi.core.constance.BinlogFlag;
 import cc.mi.core.constance.ObjectType;
 import cc.mi.core.constance.PlayerEnumFields;
@@ -90,18 +91,18 @@ public class AppContextPlayer extends PlayerBase implements Tick {
 		this.newOtherBinlog(ObjectType.PLAYER_SOCIAL, BinlogFlag.PLAYER_APPD_INT_FIELD_FLAGS_SOCIAL_CREATE, null);
 	}
 	
-	private void newOtherBinlog(char objectType, int flag, AbstractCallback<BinlogData> callback) {
+	private void newOtherBinlog(char objectType, int flag, CreateObjectCallback<BinlogData> callback) {
 		String newGuid = GuidManager.INSTANCE.replaceSuffix(this.context.getGuid(), objectType);
 		this.newOtherBinlog(newGuid, flag, callback);
 	}
 	
-	private void newOtherBinlog(final String newGuid, int flag, AbstractCallback<BinlogData> callback) {
+	private void newOtherBinlog(final String newGuid, int flag, CreateObjectCallback<BinlogData> callback) {
 		if (!AppObjectManager.INSTANCE.contains(newGuid)) {//如果不存在，重新建一个
 			logger.devLog("AppContext newOtherBinlog guid ={} newGuid={}", this.context.getGuid(), newGuid);
 			
 			if (this.isBinlogCreated((short) flag)) {
 				logger.devLog("AppContext newOtherBinlog err, player.isBinlogCreated(%u), guid ={} newGuid={}", flag, this.context.getGuid(), newGuid);
-				AppServerManager.getInstance().addWatchAndCall(newGuid, new AbstractCallback<Void>() {
+				AppServerManager.getInstance().addWatchAndCall(newGuid, new InvokeCallback<Void>() {
 					@Override
 					public void invoke(Void value) {
 //						// 技能的话生成临时数据
@@ -127,7 +128,7 @@ public class AppContextPlayer extends PlayerBase implements Tick {
 		}
 	}
 	
-	private void createOtherBinlog(final String newGuid, int flag, AbstractCallback<BinlogData> callback) {
+	private void createOtherBinlog(final String newGuid, int flag, CreateObjectCallback<BinlogData> callback) {
 		BinlogData binlogData = null;
 		
 		if (callback != null) {

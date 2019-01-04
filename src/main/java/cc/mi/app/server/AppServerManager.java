@@ -8,8 +8,7 @@ import cc.mi.app.handler.PlayerLoginHandler;
 import cc.mi.app.handler.PlayerLogoutHandler;
 import cc.mi.app.loginAction.AppLoginManager;
 import cc.mi.core.binlog.data.BinlogData;
-import cc.mi.core.callback.AbstractCallback;
-import cc.mi.core.callback.Callback;
+import cc.mi.core.callback.InvokeCallback;
 import cc.mi.core.constance.IdentityConst;
 import cc.mi.core.constance.ObjectType;
 import cc.mi.core.generate.Opcodes;
@@ -71,7 +70,7 @@ public class AppServerManager extends ServerManager {
 		logger.devLog("do init");
 		this.addTagWatchAndCall(ObjectType.FACTION_BINLOG_OWNER_STRING);
 		this.addTagWatchAndCall(ObjectType.GROUP_BINLOG_OWNER_STRING);
-		this.addTagWatchAndCall(ObjectType.GLOBAL_VALUE_OWNER_STRING, new AbstractCallback<Void>() {
+		this.addTagWatchAndCall(ObjectType.GLOBAL_VALUE_OWNER_STRING, new InvokeCallback<Void>() {
 			@Override
 			public void invoke(Void value) {
 				instance.onDataReady();
@@ -110,19 +109,19 @@ public class AppServerManager extends ServerManager {
 		return AppObjectManager.INSTANCE.contains(binlogId);
 	}
 	
-	protected void addTagWatchCallback(String ownerTag, Callback<Void> callback) {
+	protected void addTagWatchCallback(String ownerTag, InvokeCallback<Void> callback) {
 		AppObjectManager.INSTANCE.addOwnerCreateCallback(ownerTag, callback);
 	}
 	
-	protected void addWatchCallback(String binlogId, Callback<Void> callback) {
+	protected void addWatchCallback(String binlogId, InvokeCallback<Void> callback) {
 		AppObjectManager.INSTANCE.addCreateCallback(binlogId, callback);
 	}
 	
-	public void putObjects(String ownerId, final List<BinlogData> result, AbstractCallback<Boolean> abstractCallback) {
+	public void putObjects(String ownerId, final List<BinlogData> result, InvokeCallback<Boolean> abstractCallback) {
 		AppObjectManager.INSTANCE.putObjects(this.centerChannel, ownerId, result, abstractCallback);
 	}
 	
-	public void putObject(String ownerId, BinlogData result, Callback<Boolean> callback) {
+	public void putObject(String ownerId, BinlogData result, InvokeCallback<Boolean> callback) {
 		AppObjectManager.INSTANCE.putObject(this.centerChannel, ownerId, result, callback);
 	}
 }
